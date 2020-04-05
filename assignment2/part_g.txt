@@ -1,0 +1,19 @@
+/* Recall that a sparse matrix has many positions with a value of zero. 
+Systems designed to efficiently support sparse matrices look a lot like databases: They represent each cell as a record (i,j,value).
+The benefit is that you only need one record for every non-zero element of a matrix. 
+Now, since you can represent a sparse matrix as a table, it's reasonable to consider whether you can express matrix multiplication as a SQL query and whether it makes sense to do so.
+Consider that advanced databases execute queries in parallel automatically. So it can be quite efficient to process a very large sparse matrix --- millions of rows or columns --- in a database. 
+
+*/
+
+
+
+SELECT a.row_num,
+b.col_num,
+SUM(a.value * b.value) AS v 
+FROM a
+JOIN b 
+ON a.col_num = b.row_num
+/* select specific location (i,j) */
+WHERE a.row_num = 2 AND b.col_num = 3
+GROUP BY a.row_num, b.col_num

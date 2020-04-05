@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS q (kw VARCHAR(20));
+insert into q values('washington');
+insert into q values('taxes');
+insert into q values('treasury');
+
+SELECT max(sigma)
+FROM(
+
+SELECT A.docid, B.docid as b, SUM(A.count) as sigma
+FROM Frequency AS A 
+JOIN Frequency AS B 
+ON A.term = B.term 
+/* Save on computation */
+WHERE 
+    A.docid < B.docid 
+    AND A.term IN (SELECT kw FROM q)
+    AND B.term IN  (SELECT kw FROM q)
+GROUP BY A.docid, B.docid
+)
